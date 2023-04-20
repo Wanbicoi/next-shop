@@ -1,6 +1,6 @@
 import StoreHeading from "@/components/StoreHeading";
 import ProductListings from "@/components/ProductListings";
-import { getAllProductsInCollection } from "@/lib/superbase";
+import { getAllProducts } from "@/lib/superbase";
 
 function IndexPage({ products }) {
   return (
@@ -12,7 +12,7 @@ function IndexPage({ products }) {
 }
 
 export async function getStaticProps() {
-  const products = await getAllProductsInCollection();
+  const products = await getAllProducts();
   return {
     props: {
       products,

@@ -1,36 +1,35 @@
-import { useState } from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faShoppingCart } from '@fortawesome/free-solid-svg-icons'
-import { useCartContext, useAddToCartContext } from '@/context/Store'
+import { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
+import { useCartContext, useAddToCartContext } from "@/context/Store";
 
 function ProductForm({ title, handle, variants, setVariantPrice, mainImg }) {
-  const [quantity, setQuantity] = useState(1)
-  const [variantId, setVariantId] = useState(variants[0].node.id)
-  const [variant, setVariant] = useState(variants[0])
-  const isLoading = useCartContext()[2]
-  const addToCart = useAddToCartContext()
+  const [quantity, setQuantity] = useState(1);
+  const [variantId, setVariantId] = useState(variants[0].node.id);
+  const [variant, setVariant] = useState(variants[0]);
+  const isLoading = useCartContext()[2];
+  const addToCart = useAddToCartContext();
 
-  const atcBtnStyle = isLoading ?
-    `pt-3 pb-2 bg-palette-primary text-white w-full mt-2 rounded-sm font-primary font-semibold text-xl flex 
+  const atcBtnStyle = isLoading
+    ? `pt-3 pb-2 bg-palette-primary text-white w-full mt-2 rounded-sm font-primary font-semibold text-xl flex 
                       justify-center items-baseline  hover:bg-palette-dark opacity-25 cursor-none`
-    :
-    `pt-3 pb-2 bg-palette-primary text-white w-full mt-2 rounded-sm font-primary font-semibold text-xl flex 
-                      justify-center items-baseline  hover:bg-palette-dark`
+    : `pt-3 pb-2 bg-palette-primary text-white w-full mt-2 rounded-sm font-primary font-semibold text-xl flex 
+                      justify-center items-baseline  hover:bg-palette-dark`;
 
   function handleSizeChange(e) {
-    setVariantId(e)
+    setVariantId(e);
     // send back size change
-    const selectedVariant = variants.filter(v => v.node.id === e).pop()
-    setVariantPrice(selectedVariant.node.price)
+    const selectedVariant = variants.filter((v) => v.node.id === e).pop();
+    setVariantPrice(selectedVariant.node.price);
 
     // update variant
-    setVariant(selectedVariant)
+    setVariant(selectedVariant);
   }
 
   async function handleAddToCart() {
-    const varId = variant.node.id
+    const varId = variant.node.id;
     // update store context
-    if (quantity !== '') {
+    if (quantity !== "") {
       addToCart({
         productTitle: title,
         productHandle: handle,
@@ -38,16 +37,16 @@ function ProductForm({ title, handle, variants, setVariantPrice, mainImg }) {
         variantId: varId,
         variantPrice: variant.node.price,
         variantTitle: variant.node.title,
-        variantQuantity: quantity
-      })
+        variantQuantity: quantity,
+      });
     }
   }
 
   function updateQuantity(e) {
-    if (e === '') {
-      setQuantity('')
+    if (e === "") {
+      setQuantity("");
     } else {
-      setQuantity(Math.floor(e))
+      setQuantity(Math.floor(e));
     }
   }
 
@@ -77,17 +76,11 @@ function ProductForm({ title, handle, variants, setVariantPrice, mainImg }) {
             value={variantId}
             className="form-select border border-gray-300 rounded-sm w-full text-gray-900 focus:border-palette-light focus:ring-palette-light"
           >
-            {
-              variants.map(item => (
-                <option
-                  id={item.node.id}
-                  key={item.node.id}
-                  value={item.node.id}
-                >
-                  {item.node.title}
-                </option>
-              ))
-            }
+            {variants.map((item) => (
+              <option id={item.node.id} key={item.node.id} value={item.node.id}>
+                {item.node.title}
+              </option>
+            ))}
           </select>
         </div>
       </div>
@@ -100,7 +93,7 @@ function ProductForm({ title, handle, variants, setVariantPrice, mainImg }) {
         <FontAwesomeIcon icon={faShoppingCart} className="w-5 ml-2" />
       </button>
     </div>
-  )
+  );
 }
 
-export default ProductForm
+export default ProductForm;
