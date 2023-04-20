@@ -1,23 +1,23 @@
-import { useState, useEffect } from 'react'
-import { useUpdateCartQuantityContext } from '@/context/Store'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTimes } from '@fortawesome/free-solid-svg-icons'
-import Link from 'next/link'
-import Price from '@/components/Price'
-import { getCartSubTotal } from '@/utils/helpers'
+import { useState, useEffect } from "react";
+import { useUpdateCartQuantityContext } from "@/context/Store";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import Link from "next/link";
+import Price from "@/components/Price";
+import { getCartSubTotal } from "@/utils/helpers";
 
 function CartTable({ cart }) {
-  const updateCartQuantity = useUpdateCartQuantityContext()
-  const [cartItems, setCartItems] = useState([])
-  const [subtotal, setSubtotal] = useState(0)
+  const updateCartQuantity = useUpdateCartQuantityContext();
+  const [cartItems, setCartItems] = useState([]);
+  const [subtotal, setSubtotal] = useState(0);
 
   useEffect(() => {
-    setCartItems(cart)
-    setSubtotal(getCartSubTotal(cart))
-  }, [cart])
+    setCartItems(cart);
+    setSubtotal(getCartSubTotal(cart));
+  }, [cart]);
 
   function updateItem(id, quantity) {
-    updateCartQuantity(id, quantity)
+    updateCartQuantity(id, quantity);
   }
 
   return (
@@ -27,13 +27,18 @@ function CartTable({ cart }) {
           <tr className="uppercase text-xs sm:text-sm text-palette-primary border-b border-palette-light">
             <th className="font-primary font-normal px-6 py-4">Product</th>
             <th className="font-primary font-normal px-6 py-4">Quantity</th>
-            <th className="font-primary font-normal px-6 py-4 hidden sm:table-cell">Price</th>
+            <th className="font-primary font-normal px-6 py-4 hidden sm:table-cell">
+              Price
+            </th>
             <th className="font-primary font-normal px-6 py-4">Remove</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-palette-lighter">
-          {cartItems.map(item => (
-            <tr key={item.variantId} className="text-sm sm:text-base text-gray-600 text-center">
+          {cartItems.map((item) => (
+            <tr
+              key={item.variantId}
+              className="text-sm sm:text-base text-gray-600 text-center"
+            >
               <td className="font-primary font-medium px-4 sm:px-6 py-4 flex items-center">
                 <img
                   src={item.productImage.originalSrc}
@@ -42,10 +47,11 @@ function CartTable({ cart }) {
                   width={64}
                   className={`hidden sm:inline-flex`}
                 />
-                <Link passHref href={`/products/${item.productHandle}`}>
-                  <a className="pt-1 hover:text-palette-dark">
-                    {item.productTitle}, {item.variantTitle}
-                  </a>
+                <Link
+                  className="pt-1 hover:text-palette-dark"
+                  href={`/products/${item.productHandle}`}
+                >
+                  {item.productTitle}, {item.variantTitle}
                 </Link>
               </td>
               <td className="font-primary font-medium px-4 sm:px-6 py-4">
@@ -62,11 +68,7 @@ function CartTable({ cart }) {
                 />
               </td>
               <td className="font-primary text-base font-light px-4 sm:px-6 py-4 hidden sm:table-cell">
-                <Price
-                  currency="$"
-                  num={item.variantPrice}
-                  numSize="text-lg"
-                />
+                <Price currency="$" num={item.variantPrice} numSize="text-lg" />
               </td>
               <td className="font-primary font-medium px-4 sm:px-6 py-4">
                 <button
@@ -74,32 +76,30 @@ function CartTable({ cart }) {
                   className=""
                   onClick={() => updateItem(item.variantId, 0)}
                 >
-                  <FontAwesomeIcon icon={faTimes} className="w-8 h-8 text-palette-primary border border-palette-primary p-1 hover:bg-palette-lighter" />
+                  <FontAwesomeIcon
+                    icon={faTimes}
+                    className="w-8 h-8 text-palette-primary border border-palette-primary p-1 hover:bg-palette-lighter"
+                  />
                 </button>
               </td>
             </tr>
           ))}
-          {
-            subtotal === 0 ?
-              null
-              :
-              <tr className="text-center">
-                <td></td>
-                <td className="font-primary text-base text-gray-600 font-semibold uppercase px-4 sm:px-6 py-4">Subtotal</td>
-                <td className="font-primary text-lg text-palette-primary font-medium px-4 sm:px-6 py-4">
-                  <Price
-                    currency="$"
-                    num={subtotal}
-                    numSize="text-xl"
-                  />
-                </td>
-                <td></td>
-              </tr>
-          }
+          {subtotal === 0 ? null : (
+            <tr className="text-center">
+              <td></td>
+              <td className="font-primary text-base text-gray-600 font-semibold uppercase px-4 sm:px-6 py-4">
+                Subtotal
+              </td>
+              <td className="font-primary text-lg text-palette-primary font-medium px-4 sm:px-6 py-4">
+                <Price currency="$" num={subtotal} numSize="text-xl" />
+              </td>
+              <td></td>
+            </tr>
+          )}
         </tbody>
       </table>
     </div>
-  )
+  );
 }
 
-export default CartTable
+export default CartTable;
