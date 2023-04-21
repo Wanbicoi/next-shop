@@ -1,9 +1,11 @@
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { addProduct } from "@/lib/superbase";
+import { generateSlug } from "@/utils/helpers";
+
 export default function CreateProductForm() {
   const [title, setTitle] = useState();
-  const [discription, setDiscription] = useState();
+  const [description, setDescription] = useState();
   const [price, setPrice] = useState();
   const [quantity, setQuantity] = useState();
   const [discountPrice, setDiscountPrice] = useState();
@@ -13,9 +15,10 @@ export default function CreateProductForm() {
     const insertAsync = async () => {
       const succeed = await addProduct({
         title,
-        discription,
+        description,
         origin_price: price,
         discount_price: discountPrice,
+        slug: generateSlug(title),
         quantity,
       });
       if (succeed) router.push("/dashboard");
@@ -44,17 +47,17 @@ export default function CreateProductForm() {
       <div className="mb-4">
         <label
           className="block text-gray-700 text-sm font-bold mb-2"
-          htmlFor="Discription"
+          htmlFor="Description"
         >
-          Discription
+          Description
         </label>
         <input
           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          id="Discription"
+          id="Description"
           type="text"
-          placeholder="Discription"
-          value={discription}
-          onChange={(e) => setDiscription(e.target.value)}
+          placeholder="Description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
         ></input>
       </div>
 
