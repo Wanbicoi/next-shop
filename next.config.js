@@ -15,6 +15,7 @@ module.exports = async (phase, { defaultConfig }) => {
       siteUrl: "https://www.doggystickers.xyz",
       siteImagePreviewUrl: "/images/main.jpg",
       twitterHandle: "@deepwhitman",
+      NEXT_PUBLIC_LOCAL_STORAGE_NAME: "doggystickers",
     },
     images: {
       domains: ["cdn.shopify.com"],

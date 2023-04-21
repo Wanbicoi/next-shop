@@ -1,9 +1,7 @@
-import { createCheckout, updateCheckout } from "@/lib/shopify";
-
-export function saveLocalData(cart, checkoutId, checkoutUrl) {
+export function saveLocalData(cart) {
   localStorage.setItem(
     process.env.NEXT_PUBLIC_LOCAL_STORAGE_NAME,
-    JSON.stringify([cart, checkoutId, checkoutUrl])
+    JSON.stringify([cart])
   );
 }
 
@@ -13,7 +11,7 @@ function getLocalData() {
   );
 }
 
-export function setLocalData(setCart, setCheckoutId, setCheckoutUrl) {
+export function setLocalData(setCart) {
   const localData = getLocalData();
 
   if (localData) {
@@ -22,27 +20,7 @@ export function setLocalData(setCart, setCheckoutId, setCheckoutUrl) {
     } else {
       setCart([localData[0]]);
     }
-    setCheckoutId(localData[1]);
-    setCheckoutUrl(localData[2]);
   }
-}
-
-export async function createShopifyCheckout(newItem) {
-  const data = await createCheckout(
-    newItem["variantId"],
-    newItem["variantQuantity"]
-  );
-  return data;
-}
-
-export async function updateShopifyCheckout(updatedCart, checkoutId) {
-  const lineItems = updatedCart.map((item) => {
-    return {
-      variantId: item["variantId"],
-      quantity: item["variantQuantity"],
-    };
-  });
-  await updateCheckout(checkoutId, lineItems);
 }
 
 export function getCartSubTotal(cart) {

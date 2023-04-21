@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import Price from "@/components/Price";
+import ProductPrice from "./ProductPrice";
 
 function ProductCard({ product }) {
   return (
@@ -23,34 +24,7 @@ function ProductCard({ product }) {
         <div className="text-lg text-gray-600 p-4 font-primary font-light">
           {product.description}
         </div>
-        {product.discount_price ? (
-          <div className="flex justify-end items-center">
-            <s>
-              <Price currency="vnd" num={product.origin_price} />
-            </s>
-            <span
-              className="text-palette-dark font-primary font-medium text-base ml-1 pl-8 pr-4 py-1 bg-palette-lighter 
-            rounded-tl-sm triangle"
-            >
-              <Price
-                currency="vnd"
-                num={product.discount_price}
-                numSize="text-lg"
-              />
-            </span>
-          </div>
-        ) : (
-          <span
-            className="text-palette-dark font-primary font-medium text-base ml-1 pl-8 pr-4 py-1 bg-palette-lighter 
-            rounded-tl-sm triangle"
-          >
-            <Price
-              currency="vnd"
-              num={product.discount_price}
-              numSize="text-lg"
-            />
-          </span>
-        )}
+        <ProductPrice product={product} />
       </div>
     </Link>
   );

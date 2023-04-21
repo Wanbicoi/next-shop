@@ -1,114 +1,101 @@
-import { createContext, useContext, useState, useEffect } from 'react'
-import { createShopifyCheckout, updateShopifyCheckout, setLocalData, saveLocalData } from '@/utils/helpers'
+import { createContext, useContext, useState, useEffect } from "react";
+import { setLocalData, saveLocalData } from "@/utils/helpers";
 
-const CartContext = createContext()
-const AddToCartContext = createContext()
-const UpdateCartQuantityContext = createContext()
+const CartContext = createContext();
+const AddToCartContext = createContext();
+const UpdateCartQuantityContext = createContext();
 
 export function useCartContext() {
-  return useContext(CartContext)
+  return useContext(CartContext);
 }
 
 export function useAddToCartContext() {
-  return useContext(AddToCartContext)
+  return useContext(AddToCartContext);
 }
 
 export function useUpdateCartQuantityContext() {
-  return useContext(UpdateCartQuantityContext)
+  return useContext(UpdateCartQuantityContext);
 }
 
 export function CartProvider({ children }) {
-  const [cart, setCart] = useState([])
-  const [checkoutId, setCheckoutId] = useState('')
-  const [checkoutUrl, setCheckoutUrl] = useState('')
-  const [isLoading, setisLoading] = useState(false)
+  const [cart, setCart] = useState([]);
+  const [isLoading, setisLoading] = useState(false);
 
   useEffect(() => {
-    setLocalData(setCart, setCheckoutId, setCheckoutUrl)
-  }, [])
+    setLocalData(setCart);
+  }, []);
 
   useEffect(() => {
     // do this to make sure multiple tabs are always in sync
     const onReceiveMessage = (e) => {
-      console.log(e)
-      setLocalData(setCart, setCheckoutId, setCheckoutUrl)
-    }
+      console.log(e);
+      setLocalData(setCart);
+    };
 
     window.addEventListener("storage", onReceiveMessage);
     return () => {
       window.removeEventListener("storage", onReceiveMessage);
-    }
-  }, [])
+    };
+  }, []);
 
   async function addToCart(newItem) {
-    setisLoading(true)
+    setisLoading(true);
     // empty cart
     if (cart.length === 0) {
-      setCart([
-        ...cart,
-        newItem
-      ])
-
-      const response = await createShopifyCheckout(newItem)
-      setCheckoutId(response.id)
-      setCheckoutUrl(response.webUrl)
-      saveLocalData(newItem, response.id, response.webUrl)
-
+      setCart([...cart, newItem]);
+      saveLocalData(newItem);
     } else {
-      let newCart = [...cart]
-      let itemAdded = false
+      let newCart = [...cart];
+      let itemAdded = false;
       // loop through all cart items to check if variant
       // already exists and update quantity
-      newCart.map(item => {
-        if (item.variantId === newItem.variantId) {
-          item.variantQuantity += newItem.variantQuantity
-          itemAdded = true
+      newCart.map((item) => {
+        if (item.id === newItem.id) {
+          item.quantity += newItem.quantity;
+          itemAdded = true;
         }
-      })
+      });
 
-      let newCartWithItem = [...newCart]
-      if (itemAdded) {
-      } else {
-        // if its a new item than add it to the end
-        newCartWithItem = [...newCart, newItem]
+      let newCartWithItem = [...newCart];
+      if (!itemAdded) {
+        // if it's a new item than add it to the end
+        newCartWithItem = [...newCart, newItem];
       }
 
-      setCart(newCartWithItem)
-      await updateShopifyCheckout(newCartWithItem, checkoutId)
-      saveLocalData(newCartWithItem, checkoutId, checkoutUrl)
+      setCart(newCartWithItem);
+      saveLocalData(newCartWithItem);
     }
-    setisLoading(false)
+    setisLoading(false);
   }
 
   async function updateCartItemQuantity(id, quantity) {
-    setisLoading(true)
-    let newQuantity = Math.floor(quantity)
-    if (quantity === '') {
-      newQuantity = ''
+    setisLoading(true);
+    let newQuantity = Math.floor(quantity);
+    if (quantity === "") {
+      newQuantity = "";
     }
-    let newCart = [...cart]
-    newCart.forEach(item => {
-      if (item.variantId === id) {
-        item.variantQuantity = newQuantity
+    let newCart = [...cart];
+    newCart.forEach((item) => {
+      if (item.id === id) {
+        item.quantity = newQuantity;
       }
-    })
+    });
 
     // take out zeroes items
-    newCart = newCart.filter(i => i.variantQuantity !== 0)
-    setCart(newCart)
+    newCart = newCart.filter((i) => i.id !== 0);
+    setCart(newCart);
 
-    await updateShopifyCheckout(newCart, checkoutId)
-    saveLocalData(newCart, checkoutId, checkoutUrl)
-    setisLoading(false)
+    saveLocalData(newCart);
+    setisLoading(false);
   }
 
   return (
-    <CartContext.Provider value={[cart, checkoutUrl, isLoading]}>
+    <CartContext.Provider value={[cart, isLoading]}>
       <AddToCartContext.Provider value={addToCart}>
         <UpdateCartQuantityContext.Provider value={updateCartItemQuantity}>
           {children}
         </UpdateCartQuantityContext.Provider>
       </AddToCartContext.Provider>
     </CartContext.Provider>
-  )
+  );
 }

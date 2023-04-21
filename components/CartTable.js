@@ -5,6 +5,7 @@ import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 import Price from "@/components/Price";
 import { getCartSubTotal } from "@/utils/helpers";
+import ProductPrice from "./ProductPrice";
 
 function CartTable({ cart }) {
   const updateCartQuantity = useUpdateCartQuantityContext();
@@ -13,10 +14,10 @@ function CartTable({ cart }) {
 
   useEffect(() => {
     setCartItems(cart);
-    setSubtotal(getCartSubTotal(cart));
+    //setSubtotal(getCartSubTotal(cart));
   }, [cart]);
 
-  function updateItem(id, quantity) {
+  function updateOrderItemQuantity(id, quantity) {
     updateCartQuantity(id, quantity);
   }
 
@@ -30,64 +31,51 @@ function CartTable({ cart }) {
             <th className="font-primary font-normal px-6 py-4 hidden sm:table-cell">
               Price
             </th>
-            <th className="font-primary font-normal px-6 py-4">Remove</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-palette-lighter">
-          {cartItems.map((item) => (
-            <tr
-              key={item.variantId}
-              className="text-sm sm:text-base text-gray-600 text-center"
-            >
-              <td className="font-primary font-medium px-4 sm:px-6 py-4 flex items-center">
-                <img
-                  src={item.productImage.originalSrc}
-                  alt={item.productImage.altText}
-                  height={64}
-                  width={64}
-                  className={`hidden sm:inline-flex`}
-                />
-                <Link
-                  className="pt-1 hover:text-palette-dark"
-                  href={`/products/${item.productHandle}`}
-                >
-                  {item.productTitle}, {item.variantTitle}
-                </Link>
-              </td>
-              <td className="font-primary font-medium px-4 sm:px-6 py-4">
-                <input
-                  type="number"
-                  inputMode="numeric"
-                  id="variant-quantity"
-                  name="variant-quantity"
-                  min="1"
-                  step="1"
-                  value={item.variantQuantity}
-                  onChange={(e) => updateItem(item.variantId, e.target.value)}
-                  className="text-gray-900 form-input border border-gray-300 w-16 rounded-sm focus:border-palette-light focus:ring-palette-light"
-                />
-              </td>
-              <td className="font-primary text-base font-light px-4 sm:px-6 py-4 hidden sm:table-cell">
-                <Price
-                  currency="vnd"
-                  num={item.variantPrice}
-                  numSize="text-lg"
-                />
-              </td>
-              <td className="font-primary font-medium px-4 sm:px-6 py-4">
-                <button
-                  aria-label="delete-item"
-                  className=""
-                  onClick={() => updateItem(item.variantId, 0)}
-                >
-                  <FontAwesomeIcon
-                    icon={faTimes}
-                    className="w-8 h-8 text-palette-primary border border-palette-primary p-1 hover:bg-palette-lighter"
+          {cartItems
+            .filter((item) => item.quantity != 0)
+            .map((item) => (
+              <tr
+                key={item.id}
+                className="text-sm sm:text-base text-gray-600 text-center"
+              >
+                <td className="font-primary font-medium px-4 sm:px-6 py-4 flex items-center">
+                  <img
+                    // src={item.thumbnails[0]}
+                    alt="Unknown"
+                    height={64}
+                    width={64}
+                    className={`hidden sm:inline-flex`}
                   />
-                </button>
-              </td>
-            </tr>
-          ))}
+                  <Link
+                    className="pt-1 hover:text-palette-dark"
+                    href={`/products/${item.slug}`}
+                  >
+                    {item.title}
+                  </Link>
+                </td>
+                <td className="font-primary font-medium px-4 sm:px-6 py-4">
+                  {item.quantity}
+                </td>
+                <td className="font-primary text-base font-light px-4 sm:px-6 py-4 hidden sm:table-cell">
+                  {item.price}
+                </td>
+                <td className="font-primary font-medium px-4 sm:px-6 py-4">
+                  <button
+                    aria-label="delete-item"
+                    className=""
+                    onClick={() => updateOrderItemQuantity(item.id, 0)}
+                  >
+                    <FontAwesomeIcon
+                      icon={faTimes}
+                      className="w-8 h-8 text-palette-primary border border-palette-primary p-1 hover:bg-palette-lighter"
+                    />
+                  </button>
+                </td>
+              </tr>
+            ))}
           {subtotal === 0 ? null : (
             <tr className="text-center">
               <td></td>

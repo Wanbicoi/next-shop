@@ -3,10 +3,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import { useCartContext, useAddToCartContext } from "@/context/Store";
 
-function ProductForm({ title, handle, variants, setVariantPrice, mainImg }) {
+function ProductForm({ product }) {
   const [quantity, setQuantity] = useState(1);
-  const [variantId, setVariantId] = useState(variants[0].node.id);
-  const [variant, setVariant] = useState(variants[0]);
   const isLoading = useCartContext()[2];
   const addToCart = useAddToCartContext();
 
@@ -17,12 +15,13 @@ function ProductForm({ title, handle, variants, setVariantPrice, mainImg }) {
                       justify-center items-baseline  hover:bg-palette-dark`;
 
   async function onAddToCart() {
-    const varId = variant.node.id;
     // update store context
     if (quantity !== "") {
       addToCart({
-        title: title,
-        productImage: mainImg,
+        id: product.id,
+        title: product.title,
+        slug: product.slug,
+        price: product.discount_price,
         quantity,
       });
     }
