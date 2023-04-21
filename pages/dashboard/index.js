@@ -45,7 +45,7 @@ export default function Dashboard({ products }) {
               >
                 <td className="font-primary font-medium px-4 sm:px-6 py-4 flex items-center">
                   <img
-                    src={item.thumbnails ? item.thumbnails.main : ""}
+                    src={item.thumbnails ? item.thumbnails[0] : ""}
                     alt="Unknown"
                     height={64}
                     width={64}

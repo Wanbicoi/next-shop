@@ -21,7 +21,8 @@ function ProductForm({ product }) {
         id: product.id,
         title: product.title,
         slug: product.slug,
-        price: product.discount_price,
+        price: product.discount_price ?? product.origin_price,
+        thumbnail: product.thumbnails ? product.thumbnails[0] : "",
         quantity,
       });
     }

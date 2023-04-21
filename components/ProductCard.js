@@ -1,9 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
-import Price from "@/components/Price";
 import ProductPrice from "./ProductPrice";
 
-function ProductCard({ product }) {
+export default function ProductCard({ product }) {
   return (
     <Link
       href={`/products/${product.slug}`}
@@ -11,9 +10,9 @@ function ProductCard({ product }) {
     >
       <div className="h-72 border-b-2 border-palette-lighter relative">
         <Image
-          //src={product.thumbnails[0]}
+          fill
+          src={product.thumbnails ? product.thumbnails[0] : ""}
           alt="Unknown"
-          layout="fill"
           className="transform duration-500 ease-in-out hover:scale-110"
         />
       </div>
@@ -29,5 +28,3 @@ function ProductCard({ product }) {
     </Link>
   );
 }
-
-export default ProductCard;

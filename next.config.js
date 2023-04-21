@@ -18,7 +18,7 @@ module.exports = async (phase, { defaultConfig }) => {
       NEXT_PUBLIC_LOCAL_STORAGE_NAME: "doggystickers",
     },
     images: {
-      domains: ["cdn.shopify.com"],
+      domains: ["mcqzpfkknjhuyegcmibg.supabase.co"],
     },
   };
   return nextConfig;

@@ -24,11 +24,7 @@ export default function ProductPrice({ product }) {
           className="text-palette-dark font-primary font-medium text-base ml-1 pl-8 pr-4 py-1 bg-palette-lighter 
         rounded-tl-sm triangle"
         >
-          <Price
-            currency="vnd"
-            num={product.discount_price}
-            numSize="text-lg"
-          />
+          <Price currency="vnd" num={product.origin_price} numSize="text-lg" />
         </span>
       )}
     </div>

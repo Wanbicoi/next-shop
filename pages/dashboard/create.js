@@ -14,12 +14,15 @@ export default function CreateProductForm() {
   const router = useRouter();
   const onCreate = (e) => {
     const insertAsync = async () => {
-      const succeed = await addProduct({
+      const slug = generateSlug(title);
+      const thumbnailUrls = await uploadThumbnails(slug, thumbnails);
+      let succeed = await addProduct({
         title,
         description,
         origin_price: price,
         discount_price: discountPrice,
-        slug: generateSlug(title),
+        thumbnails: thumbnailUrls,
+        slug,
         quantity,
       });
       if (succeed) router.push("/dashboard");
@@ -29,13 +32,6 @@ export default function CreateProductForm() {
 
   return (
     <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 mx-auto max-w-7xl">
-      <button
-        onClick={async () => {
-          await uploadThumbnails(thumbnails);
-        }}
-      >
-        test
-      </button>
       <div className="mb-4">
         <label
           className="block text-gray-700 text-sm font-bold mb-2"
@@ -53,7 +49,7 @@ export default function CreateProductForm() {
           name="Thumbnails"
           accept="image/png, image/gif, image/jpeg"
           multiple
-          onChange={(e) => setThumbnails([e.target.files])}
+          onChange={(e) => setThumbnails(e.target.files)}
         />
       </div>
       <div className="mb-4">

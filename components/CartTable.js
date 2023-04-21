@@ -20,7 +20,7 @@ function CartTable({ cart }) {
   function updateOrderItemQuantity(id, quantity) {
     updateCartQuantity(id, quantity);
   }
-
+  console.log(cart);
   return (
     <div className="min-h-80 max-w-2xl my-4 sm:my-8 mx-auto w-full">
       <table className="mx-auto">
@@ -43,7 +43,7 @@ function CartTable({ cart }) {
               >
                 <td className="font-primary font-medium px-4 sm:px-6 py-4 flex items-center">
                   <img
-                    // src={item.thumbnails[0]}
+                    src={item.thumbnail}
                     alt="Unknown"
                     height={64}
                     width={64}
