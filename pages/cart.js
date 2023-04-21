@@ -7,7 +7,7 @@ import { useCartContext } from "@/context/Store";
 
 function CartPage() {
   const pageTitle = `Cart | ${process.env.siteTitle}`;
-  const [cart] = useCartContext();
+  const cart = useCartContext()[0];
 
   return (
     <div className="container mx-auto mb-20 min-h-screen">

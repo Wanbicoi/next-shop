@@ -4,9 +4,11 @@ import { useState } from "react";
 import { addOrder } from "@/lib/superbase";
 import { useCartContext } from "@/context/Store";
 import { getCartSubTotal } from "@/utils/helpers";
+import { useDeleteCartContext } from "@/context/Store";
 
 export default function CheckOut() {
   const cart = useCartContext()[0];
+  const deleteCart = useDeleteCartContext();
 
   const [name, setName] = useState();
   const [phone, setPhone] = useState();
@@ -24,7 +26,10 @@ export default function CheckOut() {
         },
         total: getCartSubTotal(cart),
       });
-      if (succeed) router.push("/");
+      if (succeed) {
+        deleteCart();
+        router.push("/");
+      }
     };
     insertAsync();
   };

@@ -1,7 +1,7 @@
 export function saveLocalData(cart) {
   localStorage.setItem(
     process.env.NEXT_PUBLIC_LOCAL_STORAGE_NAME,
-    JSON.stringify([cart])
+    JSON.stringify(cart)
   );
 }
 
@@ -15,10 +15,10 @@ export function setLocalData(setCart) {
   const localData = getLocalData();
 
   if (localData) {
-    if (Array.isArray(localData[0])) {
-      setCart([...localData[0]]);
+    if (Array.isArray(localData)) {
+      setCart([...localData]);
     } else {
-      setCart([localData[0]]);
+      setCart([localData]);
     }
   }
 }

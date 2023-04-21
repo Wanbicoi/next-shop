@@ -5,7 +5,7 @@ import { useCartContext, useAddToCartContext } from "@/context/Store";
 
 function ProductForm({ product }) {
   const [quantity, setQuantity] = useState(1);
-  const isLoading = useCartContext()[2];
+  const isLoading = useCartContext()[1];
   const addToCart = useAddToCartContext();
 
   const atcBtnStyle = isLoading

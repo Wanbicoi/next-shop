@@ -3,6 +3,7 @@ import { setLocalData, saveLocalData } from "@/utils/helpers";
 
 const CartContext = createContext();
 const AddToCartContext = createContext();
+const DeleteCartContext = createContext();
 const UpdateCartQuantityContext = createContext();
 
 export function useCartContext() {
@@ -11,6 +12,10 @@ export function useCartContext() {
 
 export function useAddToCartContext() {
   return useContext(AddToCartContext);
+}
+
+export function useDeleteCartContext() {
+  return useContext(DeleteCartContext);
 }
 
 export function useUpdateCartQuantityContext() {
@@ -37,7 +42,10 @@ export function CartProvider({ children }) {
       window.removeEventListener("storage", onReceiveMessage);
     };
   }, []);
-
+  async function deleteCart() {
+    setCart([]);
+    saveLocalData([]);
+  }
   async function addToCart(newItem) {
     setisLoading(true);
     // empty cart
@@ -91,11 +99,13 @@ export function CartProvider({ children }) {
 
   return (
     <CartContext.Provider value={[cart, isLoading]}>
-      <AddToCartContext.Provider value={addToCart}>
-        <UpdateCartQuantityContext.Provider value={updateCartItemQuantity}>
-          {children}
-        </UpdateCartQuantityContext.Provider>
-      </AddToCartContext.Provider>
+      <DeleteCartContext.Provider value={deleteCart}>
+        <AddToCartContext.Provider value={addToCart}>
+          <UpdateCartQuantityContext.Provider value={updateCartItemQuantity}>
+            {children}
+          </UpdateCartQuantityContext.Provider>
+        </AddToCartContext.Provider>
+      </DeleteCartContext.Provider>
     </CartContext.Provider>
   );
 }
