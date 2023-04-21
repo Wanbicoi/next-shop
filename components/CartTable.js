@@ -14,7 +14,7 @@ function CartTable({ cart }) {
 
   useEffect(() => {
     setCartItems(cart);
-    //setSubtotal(getCartSubTotal(cart));
+    setSubtotal(getCartSubTotal(cart));
   }, [cart]);
 
   function updateOrderItemQuantity(id, quantity) {

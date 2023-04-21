@@ -28,12 +28,8 @@ export function getCartSubTotal(cart) {
     return 0;
   } else {
     let totalPrice = 0;
-    cart.forEach(
-      (item) =>
-        (totalPrice +=
-          parseInt(item.variantQuantity) * parseFloat(item.variantPrice))
-    );
-    return Math.round(totalPrice * 100) / 100;
+    cart.forEach((item) => (totalPrice += item.price * item.quantity));
+    return totalPrice;
   }
 }
 
