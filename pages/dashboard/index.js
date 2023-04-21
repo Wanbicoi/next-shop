@@ -1,11 +1,11 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { getAllProducts } from "@/lib/superbase";
+import { getAllProducts } from "@/lib/supabase";
 import Image from "next/image";
 import Link from "next/link";
 import Price from "@/components/Price";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/router";
-import { deleteProduct } from "@/lib/superbase";
+import { deleteProduct } from "@/lib/supabase";
 
 export async function getStaticProps() {
   const products = await getAllProducts();

@@ -1,4 +1,4 @@
-import { getProductBySlug, getProductSlugs } from "@/lib/superbase";
+import { getProductBySlug, getProductSlugs } from "@/lib/supabase";
 import ProductDetails from "@/components/ProductDetails";
 import ProductImage from "@/components/ProductImage";
 

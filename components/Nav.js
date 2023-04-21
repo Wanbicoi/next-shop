@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useCartContext } from "@/context/Store";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { supabase } from "@/lib/superbase";
+import { supabase } from "@/lib/supabase";
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 
 function Nav() {
@@ -26,6 +26,7 @@ function Nav() {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
+      console.log(_event, session);
       setSession(session);
     });
 

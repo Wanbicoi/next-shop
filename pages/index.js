@@ -1,6 +1,6 @@
 import StoreHeading from "@/components/StoreHeading";
 import ProductListings from "@/components/ProductListings";
-import { getAllProducts } from "@/lib/superbase";
+import { getAllProducts } from "@/lib/supabase";
 
 export async function getStaticProps() {
   const products = await getAllProducts();

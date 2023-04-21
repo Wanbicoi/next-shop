@@ -1,8 +1,8 @@
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { addProduct } from "@/lib/superbase";
+import { addProduct } from "@/lib/supabase";
 import { generateSlug } from "@/utils/helpers";
-import { uploadThumbnails } from "@/lib/superbase";
+import { uploadThumbnails } from "@/lib/supabase";
 export default function CreateProductForm() {
   const [thumbnails, setThumbnails] = useState();
   const [title, setTitle] = useState();

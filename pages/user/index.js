@@ -1,38 +1,12 @@
-import { getCurrentUserId } from "@/lib/supabase";
-import { useRouter } from "next/router";
 import { useState } from "react";
-import { addOrder } from "@/lib/supabase";
-import { useCartContext } from "@/context/Store";
-import { getCartSubTotal } from "@/utils/helpers";
-import { useDeleteCartContext } from "@/context/Store";
 
-export default function CheckOut() {
-  const cart = useCartContext()[0];
-  const deleteCart = useDeleteCartContext();
-
+export default function User() {
   const [name, setName] = useState();
   const [phone, setPhone] = useState();
-  const [email, setEmail] = useState();
+  const [address, setAddress] = useState();
 
-  const router = useRouter();
-  const onCheckOut = (e) => {
-    const insertAsync = async () => {
-      const succeed = await addOrder(cart, {
-        // user_id: getCurrentUserId(),
-        user_info: {
-          name,
-          phone,
-          email,
-        },
-        total: getCartSubTotal(cart),
-      });
-      if (succeed) {
-        deleteCart();
-        router.push("/");
-      }
-    };
-    insertAsync();
-  };
+  const onSaveChange = async (e) => {};
+
   return (
     <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 mx-auto max-w-7xl">
       <div className="mb-4">
@@ -55,13 +29,13 @@ export default function CheckOut() {
       <div className="mb-4">
         <label
           className="block text-gray-700 text-sm font-bold mb-2"
-          htmlFor="phone"
+          htmlFor="Phone"
         >
           Phone
         </label>
         <input
           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          id="phone"
+          id="Phone"
           type="text"
           placeholder="Phone"
           value={phone}
@@ -72,26 +46,26 @@ export default function CheckOut() {
       <div className="mb-4">
         <label
           className="block text-gray-700 text-sm font-bold mb-2"
-          htmlFor="Email"
+          htmlFor="Address"
         >
-          Email
+          Address
         </label>
         <input
           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          id="Email"
+          id="Address"
           type="text"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Address"
+          value={address}
+          onChange={(e) => setAddress(e.target.value)}
         ></input>
       </div>
 
       <div className="flex justify-end">
         <button
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-          onClick={onCheckOut}
+          onClick={onSaveChange}
         >
-          Check Out
+          Save Change
         </button>
       </div>
     </div>

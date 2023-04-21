@@ -1,4 +1,4 @@
-import { getAllOrders } from "@/lib/superbase";
+import { getAllOrders } from "@/lib/supabase";
 import Link from "next/link";
 import Price from "@/components/Price";
 export async function getStaticProps() {
