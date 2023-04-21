@@ -1,5 +1,6 @@
 import { getAllOrders } from "@/lib/superbase";
-
+import Link from "next/link";
+import Price from "@/components/Price";
 export async function getStaticProps() {
   const orders = await getAllOrders();
   return {
@@ -9,7 +10,7 @@ export async function getStaticProps() {
   };
 }
 
-export default function Orders({ products: orders }) {
+export default function Orders({ orders }) {
   return (
     <div className="flex justify-center">
       <table className="mx-auto">
@@ -29,49 +30,30 @@ export default function Orders({ products: orders }) {
                 className="text-sm sm:text-base text-gray-600 text-center"
               >
                 <td className="font-primary font-medium px-4 sm:px-6 py-4">
-                  <p>{item.date}</p>
+                  <p>
+                    {new Date(item.date).toLocaleDateString("en-GB", {
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "numeric",
+                    })}
+                  </p>
                 </td>
                 <td className="font-primary font-medium px-4 sm:px-6 py-4 flex items-center">
-                  <img
-                    src={item.thumbnails ? item.thumbnails.main : ""}
-                    alt="Unknown"
-                    height={64}
-                    width={64}
-                    className={`hidden sm:inline-flex`}
-                  />
+                  {item.user_info.name} <br />
+                  {item.user_info.phone} <br />
+                  {item.user_info.email} <br />
+                </td>
+                <td className="font-primary text-base font-light px-4 sm:px-6 py-4 hidden sm:table-cell">
+                  <Price currency="vnd" num={item.total} numSize="text-lg" />
+                </td>
+                <td className="font-primary font-medium px-4 sm:px-6 py-4">
                   <Link
-                    className="pt-1 hover:text-palette-dark"
-                    href={`/products/${item.slug}`}
+                    className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+                    href="/"
                   >
-                    {item.title}
+                    Details
                   </Link>
                 </td>
-                <td className="font-primary text-base font-light px-4 sm:px-6 py-4 hidden sm:table-cell">
-                  <Price
-                    currency="vnd"
-                    num={item.origin_price}
-                    numSize="text-lg"
-                  />
-                </td>
-                <td className="font-primary text-base font-light px-4 sm:px-6 py-4 hidden sm:table-cell">
-                  <Price
-                    currency="vnd"
-                    num={item.discount_price}
-                    numSize="text-lg"
-                  />
-                </td>
-                {/* <td className="font-primary font-medium px-4 sm:px-6 py-4">
-                <button
-                  aria-label="delete-item"
-                  className=""
-                  onClick={() => onDeleteOrder(item.id)}
-                >
-                  <FontAwesomeIcon
-                    icon={faTimes}
-                    className="w-8 h-8 text-palette-primary border border-palette-primary p-1 hover:bg-palette-lighter"
-                  />
-                </button>
-              </td> */}
               </tr>
             ))}
         </tbody>
