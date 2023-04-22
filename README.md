@@ -1,4 +1,4 @@
-# Next.js + Tailwind CSS + Shopify Starter
+# Next.js + Tailwind CSS
 
 This is a eCommerce store that uses Next.js + Tailwind CSS in the front end
 and make it serverless with Supabase. You can see a Live Demo [here](https://next-shop-coral.vercel.app/ "Shop Pi store").
