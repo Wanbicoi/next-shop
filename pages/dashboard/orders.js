@@ -39,7 +39,7 @@ export default function Orders({ orders }) {
     setIsLoading(true);
   }, []);
   if (!isLoading) return <p className="text-center">Loading...</p>;
-  if (!isAdmin) return <AdminOnly />;
+  if (isAdmin) return <AdminOnly />;
   return (
     <div className="flex justify-stretch">
       <div

@@ -29,8 +29,8 @@ function Nav() {
       //update user when authstate change
       const {
         data: { subscription },
-      } = await supabase.auth.onAuthStateChange((_event, session) => {
-        if (session) setUser(getCurrentUserInfo());
+      } = await supabase.auth.onAuthStateChange(async (_event, session) => {
+        if (session) setUser(await getCurrentUserInfo());
         else setUser(null);
       });
       return () => subscription.unsubscribe();
@@ -64,7 +64,7 @@ function Nav() {
             </Link>
           ) : (
             <div className="flex">
-              {user.is_admin == true && (
+              {user.is_admin && (
                 <div>
                   Dashboard
                   <Link
@@ -83,7 +83,7 @@ function Nav() {
                 </div>
               )}
               <Link className="ml-3" href={"/user"}>
-                {user.email} {JSON.stringify(user)}
+                {user.email}
               </Link>
               <button
                 className=" cursor-pointer inline mx-3 text-blue-500 hover:text-blue-800"

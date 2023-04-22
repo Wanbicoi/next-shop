@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   getAllProducts,
-  getCurrentUserInFo,
+  getCurrentUserInfo,
   deleteProduct,
 } from "@/lib/supabase";
 import Image from "next/image";
@@ -29,19 +29,19 @@ export default function Dashboard({ products }) {
 
   async function onDeleteProduct(index) {
     const succeed = await deleteProduct(index);
-    if (succeed) router.push("/dashboard");
+    if (succeed) router.push("/dashboard/products");
   }
 
   useEffect(() => {
     setIsLoading(false);
     const asyncFunc = async () => {
-      setIsAdmin(await getCurrentUserInFo().is_admin);
+      setIsAdmin(await getCurrentUserInfo().is_admin);
     };
     asyncFunc();
     setIsLoading(true);
   }, []);
   if (!isLoading) return <p className="text-center">Loading...</p>;
-  if (!isAdmin) return <AdminOnly />;
+  if (isAdmin) return <AdminOnly />;
   return (
     <div className="min-h-80 max-w-2xl my-4 sm:my-8 mx-auto w-full">
       <table className="mx-auto">

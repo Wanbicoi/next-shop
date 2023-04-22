@@ -25,7 +25,7 @@ export default function CreateProductForm() {
         slug,
         quantity,
       });
-      if (succeed) router.push("/dashboard");
+      if (succeed) router.push("/dashboard/products");
     };
     insertAsync();
   };
