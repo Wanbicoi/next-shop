@@ -2,13 +2,19 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useCartContext } from "@/context/Store";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { supabase } from "@/lib/supabase";
+import { getCurrentUserId, supabase } from "@/lib/supabase";
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
+import Image from "next/image";
+import { checkUserIsAdmin } from "@/lib/supabase";
+import { useRouter } from "next/router";
 
 function Nav() {
   const cart = useCartContext()[0];
   const [cartItems, setCartItems] = useState(0);
-  const [session, setSession] = useState(null);
+  const [userId, setUserId] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     let numItems = 0;
@@ -19,26 +25,36 @@ function Nav() {
   }, [cart]);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-    });
+    const asyncFunc = async () => {
+      setUserId(await getCurrentUserId());
 
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      console.log(_event, session);
-      setSession(session);
-    });
-
-    return () => subscription.unsubscribe();
+      const {
+        data: { subscription },
+      } = await supabase.auth.onAuthStateChange((_event, session) => {
+        if (session) setUserId(session.user.id);
+        else setUserId(null);
+      });
+      return () => subscription.unsubscribe();
+    };
+    asyncFunc();
   }, []);
+
+  useEffect(() => {
+    setIsLoading(false);
+    const asyncFunc = async () => {
+      setIsAdmin(await checkUserIsAdmin(userId));
+    };
+    asyncFunc();
+    setIsLoading(true);
+  }, [userId]);
+  if (!isLoading) return <p>Loading...</p>;
 
   return (
     <header className="border-b border-palette-lighter sticky top-0 z-20 bg-white">
       <div className="flex items-center justify-between mx-auto max-w-6xl px-6 pb-2 pt-4 md:pt-6">
         <Link href="/" className=" cursor-pointer shrink-0">
           <h1 className="flex no-underline">
-            <img
+            <Image
               height="32"
               width="32"
               alt="logo"
@@ -51,19 +67,40 @@ function Nav() {
           </h1>
         </Link>
         <span className="flex">
-          {!session ? (
+          {!userId ? (
             <Link href="/auth" className=" cursor-pointer inline mx-3">
               Login
             </Link>
           ) : (
-            <button
-              className=" cursor-pointer inline mx-3"
-              onClick={() => {
-                supabase.auth.signOut();
-              }}
-            >
-              Logout
-            </button>
+            <div className="flex">
+              {isAdmin && (
+                <div>
+                  Dashboard
+                  <Link
+                    href="/dashboard/products"
+                    className="text-blue-500 hover:text-blue-800 mx-3"
+                  >
+                    Products
+                  </Link>
+                  <Link
+                    href="/dashboard/orders"
+                    className="text-blue-500 hover:text-blue-800"
+                  >
+                    Order
+                  </Link>{" "}
+                  |
+                </div>
+              )}
+              <button
+                className=" cursor-pointer inline mx-3 text-blue-500 hover:text-blue-800"
+                onClick={() => {
+                  supabase.auth.signOut();
+                  router.push("/");
+                }}
+              >
+                Logout
+              </button>
+            </div>
           )}
           <span>
             <Link className="relative inline" href="/cart" aria-label="cart">

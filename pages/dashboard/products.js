@@ -1,11 +1,17 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { getAllProducts } from "@/lib/supabase";
+import {
+  getAllProducts,
+  getCurrentUserId,
+  deleteProduct,
+  checkUserIsAdmin,
+} from "@/lib/supabase";
 import Image from "next/image";
 import Link from "next/link";
 import Price from "@/components/Price";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/router";
-import { deleteProduct } from "@/lib/supabase";
+import { useState, useEffect } from "react";
+import AdminOnly from "@/components/AdminOnly";
 
 export async function getStaticProps() {
   const products = await getAllProducts();
@@ -17,11 +23,26 @@ export async function getStaticProps() {
 }
 
 export default function Dashboard({ products }) {
+  // const [session, setSession] = useState(null);
   const router = useRouter();
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
   async function onDeleteProduct(index) {
     const succeed = await deleteProduct(index);
     if (succeed) router.push("/dashboard");
   }
+
+  useEffect(() => {
+    setIsLoading(false);
+    const asyncFunc = async () => {
+      setIsAdmin(await checkUserIsAdmin(await getCurrentUserId()));
+    };
+    asyncFunc();
+    setIsLoading(true);
+  }, []);
+  if (!isLoading) return <p>Loading...</p>;
+  if (!isAdmin) return <AdminOnly />;
   return (
     <div className="min-h-80 max-w-2xl my-4 sm:my-8 mx-auto w-full">
       <table className="mx-auto">
@@ -44,7 +65,7 @@ export default function Dashboard({ products }) {
                 className="text-sm sm:text-base text-gray-600 text-center"
               >
                 <td className="font-primary font-medium px-4 sm:px-6 py-4 flex items-center">
-                  <img
+                  <Image
                     src={item.thumbnails ? item.thumbnails[0] : ""}
                     alt="Unknown"
                     height={64}
@@ -97,14 +118,6 @@ export default function Dashboard({ products }) {
           href="/dashboard/create"
         >
           Create
-        </Link>
-      </div>
-      <div className="flex justify-end">
-        <Link
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-          href="/dashboard/orders"
-        >
-          View Orders
         </Link>
       </div>
     </div>

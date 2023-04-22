@@ -1,6 +1,11 @@
 import { getAllOrders } from "@/lib/supabase";
 import Link from "next/link";
 import Price from "@/components/Price";
+import { useState, useEffect } from "react";
+import AdminOnly from "@/components/AdminOnly";
+import { getCurrentUserId, checkUserIsAdmin } from "@/lib/supabase";
+import OrderDetail from "@/components/OrderDetail";
+
 export async function getStaticProps() {
   const orders = await getAllOrders();
   return {
@@ -11,8 +16,23 @@ export async function getStaticProps() {
 }
 
 export default function Orders({ orders }) {
+  const [orderId, setOrderId] = useState();
+
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    setIsLoading(false);
+    const asyncFunc = async () => {
+      setIsAdmin(await checkUserIsAdmin(await getCurrentUserId()));
+    };
+    asyncFunc();
+    setIsLoading(true);
+  }, []);
+  if (!isLoading) return <p>Loading...</p>;
+  if (!isAdmin) return <AdminOnly />;
   return (
-    <div className="flex justify-center">
+    <div className="flex justify-start">
       <table className="mx-auto">
         <thead>
           <tr className="uppercase text-xs sm:text-sm text-palette-primary border-b border-palette-light">
@@ -47,17 +67,20 @@ export default function Orders({ orders }) {
                   <Price currency="vnd" num={item.total} numSize="text-lg" />
                 </td>
                 <td className="font-primary font-medium px-4 sm:px-6 py-4">
-                  <Link
+                  <button
                     className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
-                    href="/"
+                    onClick={() => {
+                      setOrderId(item.id);
+                    }}
                   >
-                    Details
-                  </Link>
+                    Detail
+                  </button>
                 </td>
               </tr>
             ))}
         </tbody>
       </table>
+      <OrderDetail orderId={orderId} />
     </div>
   );
 }

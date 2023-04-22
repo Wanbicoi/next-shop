@@ -1,25 +1,14 @@
-import { useState, useEffect } from "react";
-import { useUpdateCartQuantityContext } from "@/context/Store";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes } from "@fortawesome/free-solid-svg-icons";
-import Link from "next/link";
-import Price from "@/components/Price";
-import { getCartSubTotal } from "@/utils/helpers";
-import ProductPrice from "./ProductPrice";
-import Image from "next/image";
-function CartTable({ cart }) {
-  const updateCartQuantity = useUpdateCartQuantityContext();
-  const [cartItems, setCartItems] = useState([]);
-  const [subtotal, setSubtotal] = useState(0);
+import { getAllProductsFromOrder } from "@/lib/supabase";
 
-  useEffect(() => {
-    setCartItems(cart);
-    setSubtotal(getCartSubTotal(cart));
-  }, [cart]);
+export async function getStaticProps({ params }) {
+  return {
+    props: {
+      products,
+    },
+  };
+}
 
-  function updateOrderItemQuantity(id, quantity) {
-    updateCartQuantity(id, quantity);
-  }
+export default function OrderDetail({ products }) {
   return (
     <div className="min-h-80 max-w-2xl my-4 sm:my-8 mx-auto w-full">
       <table className="mx-auto">
@@ -92,5 +81,3 @@ function CartTable({ cart }) {
     </div>
   );
 }
-
-export default CartTable;
