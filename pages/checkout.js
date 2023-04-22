@@ -1,12 +1,16 @@
-import { getCurrentUserId } from "@/lib/supabase";
+import { getCurrentUserInfo } from "@/lib/supabase";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { addOrder } from "@/lib/supabase";
 import { useCartContext } from "@/context/Store";
 import { getCartSubTotal } from "@/utils/helpers";
 import { useDeleteCartContext } from "@/context/Store";
+import CheckOutSucceed from "@/components/CheckOutSucceed";
 
 export default function CheckOut() {
+  const [isLoading, setIsLoading] = useState(true);
+  const [isCheckOutSucceed, setIsCheckOutSucceed] = useState(false);
+
   const cart = useCartContext()[0];
   const deleteCart = useDeleteCartContext();
 
@@ -15,10 +19,35 @@ export default function CheckOut() {
   const [email, setEmail] = useState();
 
   const router = useRouter();
+
+  //If user logged in then check out succeed
+  useEffect(() => {
+    setIsLoading(true);
+    const asyncFunc = async () => {
+      const user_info = await getCurrentUserInfo();
+      if (user_info) {
+        const succeed = await addOrder(cart, {
+          user_id: user_info.id,
+          user_info: {
+            name: user_info.name,
+            phone: user_info.phone,
+            email: user_info.email,
+          },
+          total: getCartSubTotal(cart),
+        });
+        if (succeed) {
+          deleteCart();
+          setIsCheckOutSucceed(true);
+        }
+      }
+      setIsLoading(false);
+    };
+    asyncFunc();
+  }, []);
+
   const onCheckOut = (e) => {
     const insertAsync = async () => {
       const succeed = await addOrder(cart, {
-        // user_id: getCurrentUserId(),
         user_info: {
           name,
           phone,
@@ -28,11 +57,14 @@ export default function CheckOut() {
       });
       if (succeed) {
         deleteCart();
-        router.push("/");
+        setIsCheckOutSucceed(true);
       }
     };
     insertAsync();
   };
+
+  if (isLoading) return <p className="text-center">Loading...</p>;
+  if (isCheckOutSucceed) return <CheckOutSucceed />;
   return (
     <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 mx-auto max-w-7xl">
       <div className="mb-4">

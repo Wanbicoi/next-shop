@@ -2,18 +2,16 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useCartContext } from "@/context/Store";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { getCurrentUserId, supabase } from "@/lib/supabase";
+import { supabase, getCurrentUserInfo } from "@/lib/supabase";
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
-import { checkUserIsAdmin } from "@/lib/supabase";
 import { useRouter } from "next/router";
-
 function Nav() {
   const cart = useCartContext()[0];
   const [cartItems, setCartItems] = useState(0);
-  const [userId, setUserId] = useState(null);
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [user, setUser] = useState();
   const [isLoading, setIsLoading] = useState(true);
+
   const router = useRouter();
 
   useEffect(() => {
@@ -26,28 +24,21 @@ function Nav() {
 
   useEffect(() => {
     const asyncFunc = async () => {
-      setUserId(await getCurrentUserId());
+      setUser(await getCurrentUserInfo());
 
+      //update user when authstate change
       const {
         data: { subscription },
       } = await supabase.auth.onAuthStateChange((_event, session) => {
-        if (session) setUserId(session.user.id);
-        else setUserId(null);
+        if (session) setUser(getCurrentUserInfo());
+        else setUser(null);
       });
       return () => subscription.unsubscribe();
     };
     asyncFunc();
   }, []);
 
-  useEffect(() => {
-    setIsLoading(false);
-    const asyncFunc = async () => {
-      setIsAdmin(await checkUserIsAdmin(userId));
-    };
-    asyncFunc();
-    setIsLoading(true);
-  }, [userId]);
-  if (!isLoading) return <p>Loading...</p>;
+  if (!isLoading) return <p className="text-center">Loading...</p>;
 
   return (
     <header className="border-b border-palette-lighter sticky top-0 z-20 bg-white">
@@ -67,13 +58,13 @@ function Nav() {
           </h1>
         </Link>
         <span className="flex">
-          {!userId ? (
+          {!user ? (
             <Link href="/auth" className=" cursor-pointer inline mx-3">
               Login
             </Link>
           ) : (
             <div className="flex">
-              {isAdmin && (
+              {user.is_admin == true && (
                 <div>
                   Dashboard
                   <Link
@@ -91,6 +82,9 @@ function Nav() {
                   |
                 </div>
               )}
+              <Link className="ml-3" href={"/user"}>
+                {user.email} {JSON.stringify(user)}
+              </Link>
               <button
                 className=" cursor-pointer inline mx-3 text-blue-500 hover:text-blue-800"
                 onClick={() => {

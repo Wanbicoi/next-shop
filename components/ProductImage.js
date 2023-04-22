@@ -34,7 +34,7 @@ export default function ProductImage({ thumbnailUrls }) {
         <div
           ref={ref}
           style={{ scrollBehavior: "smooth" }}
-          className="relative space-x-1 w-full overflow-auto border-t border-palette-lighter"
+          className=" flex space-x-1 w-full overflow-y-auto border-t border-palette-lighter"
         >
           {thumbnailUrls &&
             thumbnailUrls.map((imgItem, index) => (
@@ -43,7 +43,7 @@ export default function ProductImage({ thumbnailUrls }) {
                 className="relative w-40 h-32 flex-shrink-0 rounded-sm "
                 onClick={() => setMainImg(imgItem)}
               >
-                <Image fill src={imgItem} alt="Unknown" className="" />
+                <Image fill src={imgItem} alt="Unknown" />
               </button>
             ))}
         </div>

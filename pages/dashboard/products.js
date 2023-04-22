@@ -1,9 +1,8 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   getAllProducts,
-  getCurrentUserId,
+  getCurrentUserInFo,
   deleteProduct,
-  checkUserIsAdmin,
 } from "@/lib/supabase";
 import Image from "next/image";
 import Link from "next/link";
@@ -36,12 +35,12 @@ export default function Dashboard({ products }) {
   useEffect(() => {
     setIsLoading(false);
     const asyncFunc = async () => {
-      setIsAdmin(await checkUserIsAdmin(await getCurrentUserId()));
+      setIsAdmin(await getCurrentUserInFo().is_admin);
     };
     asyncFunc();
     setIsLoading(true);
   }, []);
-  if (!isLoading) return <p>Loading...</p>;
+  if (!isLoading) return <p className="text-center">Loading...</p>;
   if (!isAdmin) return <AdminOnly />;
   return (
     <div className="min-h-80 max-w-2xl my-4 sm:my-8 mx-auto w-full">

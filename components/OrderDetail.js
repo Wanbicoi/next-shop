@@ -1,16 +1,16 @@
-import { getAllProductsFromOrder } from "@/lib/supabase";
-
-export async function getStaticProps({ params }) {
-  return {
-    props: {
-      products,
-    },
-  };
-}
-
+import { useEffect, useState } from "react";
+import Price from "./Price";
+import Link from "next/link";
+import Image from "next/image";
 export default function OrderDetail({ products }) {
+  const [total, setTotal] = useState();
+  useEffect(() => {
+    let sum = 0;
+    if (products) products.forEach((product) => (sum += product.total));
+    setTotal(sum);
+  }, []);
   return (
-    <div className="min-h-80 max-w-2xl my-4 sm:my-8 mx-auto w-full">
+    <div className="min-h-80 min-w-[35rem] my-4 sm:my-8 mx-auto">
       <table className="mx-auto">
         <thead>
           <tr className="uppercase text-xs sm:text-sm text-palette-primary border-b border-palette-light">
@@ -22,16 +22,15 @@ export default function OrderDetail({ products }) {
           </tr>
         </thead>
         <tbody className="divide-y divide-palette-lighter">
-          {cartItems
-            .filter((item) => item.quantity != 0)
-            .map((item) => (
+          {products &&
+            products.map((item) => (
               <tr
                 key={item.id}
                 className="text-sm sm:text-base text-gray-600 text-center"
               >
                 <td className="font-primary font-medium px-4 sm:px-6 py-4 flex items-center">
                   <Image
-                    src={item.thumbnail}
+                    src={item.thumbnails ? item.thumbnails[0] : ""}
                     alt="Unknown"
                     height={64}
                     width={64}
@@ -50,28 +49,16 @@ export default function OrderDetail({ products }) {
                 <td className="font-primary text-base font-light px-4 sm:px-6 py-4 hidden sm:table-cell">
                   {item.price}
                 </td>
-                <td className="font-primary font-medium px-4 sm:px-6 py-4">
-                  <button
-                    aria-label="delete-item"
-                    className=""
-                    onClick={() => updateOrderItemQuantity(item.id, 0)}
-                  >
-                    <FontAwesomeIcon
-                      icon={faTimes}
-                      className="w-8 h-8 text-palette-primary border border-palette-primary p-1 hover:bg-palette-lighter"
-                    />
-                  </button>
-                </td>
               </tr>
             ))}
-          {subtotal === 0 ? null : (
+          {total != 0 && (
             <tr className="text-center">
               <td></td>
               <td className="font-primary text-base text-gray-600 font-semibold uppercase px-4 sm:px-6 py-4">
-                Subtotal
+                Total
               </td>
               <td className="font-primary text-lg text-palette-primary font-medium px-4 sm:px-6 py-4">
-                <Price currency="vnd" num={subtotal} numSize="text-xl" />
+                <Price currency="vnd" num={total} numSize="text-xl" />
               </td>
               <td></td>
             </tr>

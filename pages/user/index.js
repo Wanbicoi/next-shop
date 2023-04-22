@@ -1,14 +1,52 @@
-import { useState } from "react";
+import { getCurrentUserInfo, updateCurrentUserInfo } from "@/lib/supabase";
+import { useEffect, useState } from "react";
 
 export default function User() {
   const [name, setName] = useState();
   const [phone, setPhone] = useState();
   const [address, setAddress] = useState();
+  const [email, setEmail] = useState();
 
-  const onSaveChange = async (e) => {};
+  useEffect(() => {
+    const asyncFunc = async () => {
+      const user = await getCurrentUserInfo();
+      setEmail(user.email);
+      setName(user.name);
+      setAddress(user.address);
+      setPhone(user.phone);
+    };
+    asyncFunc();
+  }, []);
+
+  const onSaveChange = async (e) => {
+    const succeed = await updateCurrentUserInfo({
+      name,
+      phone,
+      address,
+    });
+    if (succeed) alert("Save changed!");
+  };
 
   return (
     <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 mx-auto max-w-7xl">
+      <div className="mb-4">
+        <label
+          className="block text-gray-700 text-sm font-bold mb-2"
+          htmlFor="Email"
+        >
+          Email
+        </label>
+        <input
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          id="Email"
+          type="text"
+          placeholder="Email"
+          value={email}
+          disabled="disabled"
+          onChange={(e) => setEmail(e.target.value)}
+        ></input>
+      </div>
+
       <div className="mb-4">
         <label
           className="block text-gray-700 text-sm font-bold mb-2"
