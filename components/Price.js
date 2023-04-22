@@ -1,10 +1,11 @@
 function Price({ currency, num, numSize }) {
-  return (
-    <>
-      <span className={numSize}>{num}</span>&nbsp;
-      {currency}
-    </>
-  );
+  if (num)
+    return (
+      <>
+        <span className={numSize}>{num}</span>&nbsp;
+        {currency}
+      </>
+    );
 }
 
 export default Price;
