@@ -45,22 +45,20 @@ export default function CheckOut() {
     asyncFunc();
   }, []);
 
-  const onCheckOut = (e) => {
-    const insertAsync = async () => {
-      const succeed = await addOrder(cart, {
-        user_info: {
-          name,
-          phone,
-          email,
-        },
-        total: getCartSubTotal(cart),
-      });
-      if (succeed) {
-        deleteCart();
-        setIsCheckOutSucceed(true);
-      }
-    };
-    insertAsync();
+  const onCheckOut = async () => {
+    console.log("sd;lfk");
+    const succeed = await addOrder(cart, {
+      user_info: {
+        name,
+        phone,
+        email,
+      },
+      total: getCartSubTotal(cart),
+    });
+    if (succeed) {
+      deleteCart();
+      setIsCheckOutSucceed(true);
+    }
   };
 
   if (isLoading) return <p className="text-center">Loading...</p>;
@@ -83,7 +81,6 @@ export default function CheckOut() {
           onChange={(e) => setName(e.target.value)}
         ></input>
       </div>
-
       <div className="mb-4">
         <label
           className="block text-gray-700 text-sm font-bold mb-2"
@@ -100,7 +97,6 @@ export default function CheckOut() {
           onChange={(e) => setPhone(e.target.value)}
         ></input>
       </div>
-
       <div className="mb-4">
         <label
           className="block text-gray-700 text-sm font-bold mb-2"
@@ -117,7 +113,6 @@ export default function CheckOut() {
           onChange={(e) => setEmail(e.target.value)}
         ></input>
       </div>
-
       <div className="flex justify-end">
         <button
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"

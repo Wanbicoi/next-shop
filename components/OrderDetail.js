@@ -3,12 +3,14 @@ import Price from "./Price";
 import Link from "next/link";
 import Image from "next/image";
 export default function OrderDetail({ products }) {
-  const [total, setTotal] = useState();
+  const [total, setTotal] = useState(0);
   useEffect(() => {
     let sum = 0;
-    if (products) products.forEach((product) => (sum += product.total));
+    if (products) products.forEach((product) => (sum += product.price));
+    console.log(products);
     setTotal(sum);
-  }, []);
+  }, [products]);
+
   return (
     <div className="min-h-80 min-w-[35rem] my-4 sm:my-8 mx-auto">
       <table className="mx-auto">

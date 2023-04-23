@@ -77,7 +77,7 @@ function Nav() {
                     href="/dashboard/orders"
                     className="text-blue-500 hover:text-blue-800"
                   >
-                    Order
+                    Orders
                   </Link>{" "}
                   |
                 </div>
