@@ -16,7 +16,7 @@ export async function getStaticPaths() {
   };
 }
 
-export async function getServerSideProps({ params }) {
+export async function getStaticProps({ params }) {
   const product = await getProductBySlug(params.slug);
   return {
     props: { product },
