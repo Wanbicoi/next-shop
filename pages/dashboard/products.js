@@ -12,7 +12,7 @@ import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import AdminOnly from "@/components/AdminOnly";
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
   const products = await getAllProducts();
   return {
     props: {

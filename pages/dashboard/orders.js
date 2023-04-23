@@ -8,7 +8,7 @@ import { useState, useEffect } from "react";
 import AdminOnly from "@/components/AdminOnly";
 import OrderDetail from "@/components/OrderDetail";
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
   const orders = await getAllOrders();
   return {
     props: {

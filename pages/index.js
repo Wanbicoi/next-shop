@@ -2,7 +2,7 @@ import StoreHeading from "@/components/StoreHeading";
 import ProductListings from "@/components/ProductListings";
 import { getAllProducts } from "@/lib/supabase";
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
   const products = await getAllProducts();
   return {
     props: {
