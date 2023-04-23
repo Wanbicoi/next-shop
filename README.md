@@ -12,7 +12,7 @@ I store the cart information in localStorage to persist user session.
 - Supabase
 - Vercel
 - Font Awesome Icons
-- Josefin Sans Google Font
+- Josefin Sans Google Font.
 
 ## How to use
 
